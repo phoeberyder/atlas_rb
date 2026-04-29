@@ -130,7 +130,7 @@ for n in range(number_of_strips_in_spectrogram):
     peaks_r = np.sum(range_doppler_map, axis = 1)
     peak_r = np.argmax(peaks_r)
     strip_r = range_doppler_map[peak_r:peak_r+1, :]
-    rcm[n, n:n+1] = np.abs(strip_r)**2
+    rcm[:, n:n+1] = np.abs(strip_r.T)**2
 
 np.save('./spectrogram.npy', spectrogram)
 np.save('./rcm.npy', rcm)
