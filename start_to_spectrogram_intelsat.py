@@ -20,7 +20,7 @@ freq = 1295e6
 c = 299792458
 samp_rate = 16e6
 alpha = bw/Tp   
-height = 64 # CPI Size
+height =128 # CPI Size
 startoffset = int(samp_rate * 100)
 infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdif'
 channel_pol = 0
@@ -122,7 +122,7 @@ plt.xlabel("CPI Index")
 plt.ylabel("Range Bin")
 plt.colorbar(label='Power (dB)')
 plt.tight_layout()
-plt.savefig('./rcm_intelsat.png')
+plt.savefig('./rcm_intelsat_128.png')
 
 max_velocity = c / (4 * pri * (freq))
 
@@ -133,8 +133,8 @@ plt.xlabel("CPI Index")
 plt.ylabel("Doppler Velocity (m/s)")
 plt.colorbar(label='Power (dB)')
 plt.tight_layout()
-plt.savefig('./spectrogram_intelsat.png')
+plt.savefig('./spectrogram_intelsat_128.png')
 
-np.save('./processed_data_rcm_intelsat.npy', cropped_rcm)
-np.save('./processed_data_spectrogram_intelsat.npy', spectrogram)
+np.save('./processed_data_rcm_intelsat_128.npy', cropped_rcm)
+np.save('./processed_data_spectrogram_intelsat_128.npy', spectrogram)
 
