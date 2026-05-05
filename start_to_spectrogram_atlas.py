@@ -5,12 +5,13 @@ from schedule_utils import range_finder_general
 from skyfield.api import load, EarthSatellite
 from pc_utils import rect
 
-# --- Input Parameters ---
+# inputting TLE data for ATLAS RB
 tle_line_1 = '1 40731U 15033B   26046.96407114  .00000009  00000-0  00000+0 0  9995'
 tle_line_2 = '2 40731  54.6696 288.5525 0237286   9.2718 351.2385  1.90866878 73834'
 ts = load.timescale()
 atlas_tle = EarthSatellite(tle_line_1, tle_line_2, 'atlas', ts)
 
+# input parameters
 f1 = 0        
 bw = 8e6        
 Tp = 800e-6    
@@ -23,7 +24,7 @@ height = 128 # CPI Size
 startoffset = int(samp_rate * 100)
 infilename = '/share/nas2/pryder/realtime_test_1/vdifs/SD20003_20260218_mk2_1295MHz_atlasrb.vdif'
 
-# --- Open and Unpack VDIF ---
+# Open VDIF
 with open(infilename) as infile:
     header = readheader(infile)
     framedata, seconds, framenums, threads = readframes(infile, header)
@@ -51,7 +52,7 @@ peak_history = []
 
 print(f'Total strips to process: {number_of_strips}')
 
-# --- Processing Loop ---
+
 for n in range(number_of_strips):
     print(f"Processing strip {n+1} of {number_of_strips}", end='\r')
     
@@ -65,34 +66,33 @@ for n in range(number_of_strips):
     range_rate = range_finder_general(atlas_tle, t_tle, 'mark')[1]
     tau_dot = range_rate / c
     
-    # Create Coherent Template
+    # Create template: baseband * chirp * envelope
     t_pulse = np.linspace(0, pri, points, endpoint=False)
     template = np.exp(1j * np.pi * alpha * t_pulse**2 * (1 - tau_dot)**2) * rect(t_pulse / (Tp * (1 + tau_dot)))
     template_fft = np.fft.fft(template)
 
     cdat_pc = np.zeros((height, points), dtype=complex)
     
-    # Pulse Compression with Intra-CPI Corrections
+    # Pulse Compression
     for i in range(height):
-        t_i = i * pri
+        start_sec = i * pri
         pulse_fft = np.fft.fft(cpi_data[i])
         
-        # 1. RCM Correction (Fourier Shift Theorem)
-        # Shift the pulse back by the distance the target moved since the start of the CPI
-        delta_tau = 2 * (range_rate * t_i) / c
-        rcm_shift = np.exp(1j * 2 * np.pi * freqs * delta_tau)
+        # Calculating RCM Correction
+        delta_tau = 2 * (range_rate * start_sec) / c     # change in range rate since beginning of CPI, converted to time delay
+        rcm_shift = np.exp(1j * 2 * np.pi * freqs * delta_tau)          #applying RCM correction in the frequency domain using linear phase shift corresponding to the change in range delay over the CPI duration
         
-        # Apply matched filter and RCM shift simultaneously
+        # Pulse Compression and RCM shift
         compressed_pulse = np.fft.ifft(pulse_fft * np.conj(template_fft) * rcm_shift)
         
-        # 2. Bulk Doppler Phase Correction
-        # Remove the massive phase rotation caused by orbital velocity to center target at 0 Hz
+        # Doppler Phase Correction
         f_d = -2 * range_rate * freq / c
-        bulk_phase = np.exp(-1j * 2 * np.pi * f_d * t_i)
+        bulk_phase = np.exp(-1j * 2 * np.pi * f_d * start_sec)
         
+        # applying doppler correction
         cdat_pc[i] = compressed_pulse * bulk_phase
     
-    # Average power across the aligned pulses
+    # Average power
     cpi_power = np.mean(np.abs(cdat_pc)**2, axis=0)
     rcm_map[:, n] = cpi_power
     
