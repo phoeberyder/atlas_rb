@@ -8,7 +8,7 @@ def start_to_spectrogram_intelsat(infilename, cpi, overlap_factor, telescope, ch
     # inputting TLE data for intelsat 33e
     tle_line_1 = '1 61995U 16053M   25035.62796428  .00000095  00000-0  00000-0 0  9998'
     tle_line_2 = '2 61995   0.2642  88.1708 0053675 268.4745   3.2920  1.01033442  1106'
-    target_name = 'intelsat33e'
+    target_name = 'intelsat'
     ts = load.timescale()
     intelsat_tle = EarthSatellite(tle_line_1, tle_line_2, target_name, ts)
 
@@ -31,7 +31,7 @@ def start_to_spectrogram_intelsat(infilename, cpi, overlap_factor, telescope, ch
     iq_samples = iq_conversion(pola)
     print('Converted into IQ samples.')
 
-    rcm_map, spectrogram, peak_history, number_of_strips = pc_and_spectrogram(height, points, overlap_factor, iq_samples, samp_rate, pri, alpha, intelsat_tle, telescope, Tp, freq, window_function)
+    rcm_map, spectrogram, peak_history, number_of_strips = pc_and_spectrogram(target_name, height, points, overlap_factor, iq_samples, samp_rate, pri, alpha, intelsat_tle, telescope, Tp, freq, window_function)
     print('\nProcessing Complete.')
 
     # --- Plotting ---
@@ -69,7 +69,6 @@ def start_to_spectrogram_atlas(infilename, cpi, overlap_factor, telescope, chann
     samp_rate = 16e6
     alpha = bw/Tp   
     height =cpi # CPI Size
-    startoffset = int(samp_rate * 100)
     points = int(samp_rate * pri)
 
     # Open VDIF
@@ -80,7 +79,7 @@ def start_to_spectrogram_atlas(infilename, cpi, overlap_factor, telescope, chann
     iq_samples = iq_conversion(pola)
     print('Converted into IQ samples.')
 
-    rcm_map, spectrogram, peak_history, number_of_strips = pc_and_spectrogram(height, points, overlap_factor, iq_samples, samp_rate, pri, alpha, atlas_tle, telescope, Tp, freq, window_function)
+    rcm_map, spectrogram, peak_history, number_of_strips = pc_and_spectrogram(target_name, height, points, overlap_factor, iq_samples, samp_rate, pri, alpha, intelsat_tle, telescope, Tp, freq, window_function)
     print('\nProcessing Complete.')
 
     # --- Plotting ---

@@ -29,7 +29,7 @@ def iq_conversion(pola):
     iq_samples = pola * phase_all_samples[:pola.size]
     return iq_samples
 
-def pc_and_spectrogram(height, points, overlap_factor, iq_samples, samp_rate, pri, alpha, tle, telescope, Tp, freq, window_function):
+def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_rate, pri, alpha, tle, telescope, Tp, freq, window_function):
     '''
     Inputs:
     height: CPI size in pulses
@@ -72,7 +72,10 @@ def pc_and_spectrogram(height, points, overlap_factor, iq_samples, samp_rate, pr
         
         # Update TLE range rate for the start of this CPI
         s_offset = (start_idx / samp_rate)
-        t_tle = ts.utc(2025, 2, 5, 13, 45, s_offset)
+        if target == 'atlas':
+            t_tle = ts.utc(2025, 2, 5, 13, 45, s_offset)
+        elif target == 'intelsat':
+            t_tle = ts.utc(2026, 2, 18, 14, 50, s_offset)
         range_rate = range_finder_general(tle, t_tle, telescope)[1]
         tau_dot = range_rate / c
         
