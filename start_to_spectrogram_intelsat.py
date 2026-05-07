@@ -79,7 +79,7 @@ def start_to_spectrogram_atlas(infilename, cpi, overlap_factor, telescope, chann
     iq_samples = iq_conversion(pola)
     print('Converted into IQ samples.')
 
-    rcm_map, spectrogram, peak_history, number_of_strips = pc_and_spectrogram(target_name, height, points, overlap_factor, iq_samples, samp_rate, pri, alpha, intelsat_tle, telescope, Tp, freq, window_function)
+    rcm_map, spectrogram, peak_history, number_of_strips = pc_and_spectrogram(target_name, height, points, overlap_factor, iq_samples, samp_rate, pri, alpha, atlas_tle, telescope, Tp, freq, window_function)
     print('\nProcessing Complete.')
 
     # --- Plotting ---
