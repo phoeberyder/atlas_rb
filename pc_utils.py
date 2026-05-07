@@ -132,7 +132,7 @@ def pc_and_spectrogram(height, points, overlap_factor, iq_samples, samp_rate, pr
         spectrogram[:, n] = np.abs(doppler_spectrum)**2
         return rcm_map, spectrogram, peak_history, number_of_strips
     
-def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_name: str, height: int, overlap_factor: float, channel):
+def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_name: str, height: int, overlap_factor: float, channel: int, window_function: str):
     '''
     Inputs:
     to_be_plotted: 2D array of values to be plotted (e.g. RCM map or spectrogram)
@@ -143,16 +143,18 @@ def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_
     target_name: name of the target satellite (used for saving the file)
     height: CPI size (used for saving the file)
     overlap_factor: how much the CPIs overlapped (used for saving the file)
-    
+    channel: the channel number (used for saving the file)
+    window_function: the window function used (used for saving the file)
     Output:
     A saved plot of the input 2D array with appropriate labels and title.
     '''
     plt.figure(figsize=(10, 6))
-    plt.imshow(10 * np.log10(to_be_plotted + 1e-12), aspect='auto', origin='lower', extent=extent)
+    plt.imshow(10 * np.log10(to_be_plotted + 1e-12), aspect='auto', origin='lower', extent=extent, vmax=0, vmin=-25)
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.colorbar(label='Power (dB)')
     plt.tight_layout()
-    plt.savefig('./'+title+ '_' + target_name + '_' + str(height) + '_'+str(height//overlap_factor)+'channel_'+str(channel)+'.png')
+    plt.savefig('./'+title+ '_' + target_name + '_' + str(height) + '_'+str(height//overlap_factor)+'channel_'+str(channel)+'_'+str(window_function)+'.png')
+    plt.close()
     return
