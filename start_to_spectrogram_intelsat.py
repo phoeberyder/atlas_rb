@@ -51,7 +51,7 @@ def start_to_spectrogram_intelsat(infilename, cpi, overlap_factor, telescope, ch
 
     return
 
-def start_to_spectrogram_atlas(infilename, cpi, overlap_factor, telescope, channel, window_function):
+def start_to_spectrogram_atlas_function(infilename, cpi, overlap_factor, telescope, channel, window_function):
     # inputting TLE data for atlas
     tle_line_1 = '1 40731U 15033B   26046.96407114  .00000009  00000-0  00000+0 0  9995'
     tle_line_2 = '2 40731  54.6696 288.5525 0237286   9.2718 351.2385  1.90866878 73834'
@@ -59,8 +59,7 @@ def start_to_spectrogram_atlas(infilename, cpi, overlap_factor, telescope, chann
     ts = load.timescale()
     atlas_tle = EarthSatellite(tle_line_1, tle_line_2, target_name, ts)
 
-    # input parameters
-    f1 = 0        
+    # input parameters      
     bw = 8e6        
     Tp = 800e-6    
     pri = 20.506e-3 
@@ -82,11 +81,11 @@ def start_to_spectrogram_atlas(infilename, cpi, overlap_factor, telescope, chann
     rcm_map, spectrogram, peak_history, number_of_strips = pc_and_spectrogram(target_name, height, points, overlap_factor, iq_samples, samp_rate, pri, alpha, atlas_tle, telescope, Tp, freq, window_function)
     print('\nProcessing Complete.')
 
-    # --- Plotting ---
-    # Crop the RCM map so Matplotlib doesn't alias the track to oblivion
-    min_peak = max(0, np.min(peak_history) - 200)
-    max_peak = min(points, np.max(peak_history) + 200)
-    cropped_rcm = rcm_map[min_peak:max_peak, :]
+    # # --- Plotting ---
+    # # Crop the RCM map so Matplotlib doesn't alias the track to oblivion
+    # min_peak = max(0, np.min(peak_history) - 200)
+    # max_peak = min(points, np.max(peak_history) + 200)
+    # cropped_rcm = rcm_map[min_peak:max_peak, :]
 
     # plotter(cropped_rcm, "Range-Time Migration", "CPI Index", "Range Bin", [0, number_of_strips, min_peak, max_peak], target_name, height, overlap_factor, channel, window_function)
 
@@ -94,7 +93,7 @@ def start_to_spectrogram_atlas(infilename, cpi, overlap_factor, telescope, chann
 
     plotter(spectrogram, "Spectrogram", "CPI Index", "Doppler Velocity (m/s)", [0, spectrogram.shape[1], -max_velocity, max_velocity], target_name, height, overlap_factor, channel, window_function)
 
-    np.save('./rcm_' + target_name + '_' + str(height) + '_'+str(height//overlap_factor)+'channel_'+str(channel)+str(window_function)+'.npy', cropped_rcm)
+    # np.save('./rcm_' + target_name + '_' + str(height) + '_'+str(height//overlap_factor)+'channel_'+str(channel)+str(window_function)+'.npy', cropped_rcm)
     np.save('./spectrogram_' + target_name + '_' + str(height) + '_'+str(height//overlap_factor)+'channel_'+str(channel)+str(window_function)+'.npy', spectrogram)
     return
   

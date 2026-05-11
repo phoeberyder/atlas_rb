@@ -51,7 +51,6 @@ peak_history = []
 
 print(f'Total strips to process: {number_of_strips}')
 
-# --- Processing Loop ---
 for n in range(number_of_strips):
     print(f"Processing strip {n+1} of {number_of_strips}", end='\r')
     
@@ -86,7 +85,7 @@ for n in range(number_of_strips):
         compressed_pulse = np.fft.ifft(pulse_fft * np.conj(template_fft) * rcm_shift)
         
         # 2. Bulk Doppler Phase Correction
-        # Remove the massive phase rotation caused by orbital velocity to center target at 0 Hz
+       
         f_d = -2 * range_rate * freq / c
         bulk_phase = np.exp(-1j * 2 * np.pi * f_d * t_i)
         
@@ -116,7 +115,7 @@ cropped_rcm = rcm_map[min_peak:max_peak, :]
 
 plt.figure(figsize=(10, 6))
 plt.imshow(10 * np.log10(cropped_rcm + 1e-12), aspect='auto', origin='lower', extent=[0, number_of_strips, min_peak, max_peak])
-plt.title("Figure 4: Range-Time Migration")
+plt.title("Range-Time Migration")
 plt.xlabel("CPI Index")
 plt.ylabel("Range Bin")
 plt.colorbar(label='Power (dB)')
@@ -125,7 +124,7 @@ plt.savefig('./figure4_rcm.png')
 
 plt.figure(figsize=(10, 6))
 plt.imshow(10 * np.log10(spectrogram + 1e-12), aspect='auto', origin='lower')
-plt.title("Figure 5: Micro-Doppler Spectrogram")
+plt.title("Spectrogram")
 plt.xlabel("CPI Index")
 plt.ylabel("Doppler Bin")
 plt.colorbar(label='Power (dB)')
