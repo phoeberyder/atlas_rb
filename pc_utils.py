@@ -133,7 +133,7 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
 
         doppler_spectrum = np.fft.fftshift(np.fft.fft(range_cut * window))
         spectrogram[:, n] = np.abs(doppler_spectrum)**2
-        return rcm_map, spectrogram, peak_history, number_of_strips
+    return rcm_map, spectrogram, peak_history, number_of_strips
     
 def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_name: str, height: int, overlap_factor: float, channel: int, window_function: str):
     '''
