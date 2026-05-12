@@ -72,9 +72,9 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
         
         # Update TLE range rate for the start of this CPI
         s_offset = (start_idx / samp_rate)
-        if target == 'atlas':
+        if target == 'intelsat':
             t_tle = ts.utc(2025, 2, 5, 13, 45, s_offset)
-        elif target == 'intelsat':
+        elif target == 'atlas':
             t_tle = ts.utc(2026, 2, 18, 14, 50, s_offset)
         range_rate = range_finder_general(tle, t_tle, telescope)[1]
         tau_dot = range_rate / c
