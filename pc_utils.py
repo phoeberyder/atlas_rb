@@ -152,7 +152,7 @@ def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_
     A saved plot of the input 2D array with appropriate labels and title.
     '''
     plt.figure(figsize=(10, 6))
-    plt.imshow(10 * np.log10(spectrogram+1e-12)-np.max(10 * np.log10(spectrogram+1e-12)), aspect='auto', origin='lower', extent=extent, vmax=0, vmin=-25)
+    plt.imshow(10 * np.log10(to_be_plotted+1e-12)-np.max(10 * np.log10(to_be_plotted+1e-12)), aspect='auto', origin='lower', extent=extent, vmax=0, vmin=-25)
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
