@@ -12,7 +12,7 @@ window_functions_list = ['hamming', 'blackman', 'boxcar', 'kaiser', 'blackmanhar
 #     start_to_spectrogram_atlas_function('/share/nas2/pryder/realtime_test_1/vdifs/SD20003_20260218_mk2_1295MHz_atlasrb.vdif', cpi=128, overlap_factor=2, telescope='mark', channel=1, window_function=window_function)
 
 
-cpi_list = [32, 64, 128, 256, 512]
+cpi_list = [256, 512]
 
 for cpi in cpi_list:
     print(f"Processing Intelsat with CPI={cpi}...")
