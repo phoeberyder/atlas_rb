@@ -53,8 +53,13 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
     freqs = np.fft.fftfreq(points, d=1/samp_rate) # Used for Fourier Shift RCM correction
     startoffset = int(samp_rate * 100)
 
-    cpi_jump_samples = (height * points) // overlap_factor
-    number_of_strips = int((len(iq_samples) - startoffset - (height * points)) // cpi_jump_samples)
+    if overlap_factor == 'max':
+        cpi_jump_samples = 1
+        number_of_strips = 200
+
+    else:
+        cpi_jump_samples = (height * points) // overlap_factor
+        number_of_strips = int((len(iq_samples) - startoffset - (height * points)) // cpi_jump_samples)
 
     rcm_map = np.zeros((points, number_of_strips))
     spectrogram = np.zeros((height, number_of_strips))
