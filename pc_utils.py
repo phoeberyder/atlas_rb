@@ -56,6 +56,7 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
     if overlap_factor == 'max':
         cpi_jump_samples = 1
         number_of_strips = 200
+        overlap_factor = 1
 
     else:
         cpi_jump_samples = (height * points) // overlap_factor
@@ -142,7 +143,7 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
         spectrogram[:, n] = np.abs(doppler_spectrum)**2
     return rcm_map, spectrogram, peak_history, number_of_strips
     
-def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_name: str, height: int, overlap_factor: float, channel: int, window_function: str):
+def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_name: str, height: int, overlap_factor, channel: int, window_function: str):
     '''
     Inputs:
     to_be_plotted: 2D array of values to be plotted (e.g. RCM map or spectrogram)
@@ -165,6 +166,6 @@ def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_
     plt.ylabel(ylabel)
     plt.colorbar(label='Power (dB)')
     plt.tight_layout()
-    plt.savefig('./'+title+ '_' + target_name + '_' + str(height) + '_'+str(height//overlap_factor)+'channel_'+str(channel)+'_'+str(window_function)+'.png')
+    plt.savefig('./'+title+ '_' + target_name + '_' + str(height) + '_'+str(overlap_factor)+'channel_'+str(channel)+'_'+str(window_function)+'.png')
     plt.close()
     return
