@@ -3,7 +3,7 @@ from unpack_vdif import unpacksamps, sortframes, readframes, readheader
 from schedule_utils import range_finder_general
 from skyfield.api import load
 import matplotlib.pyplot as plt
-from scipy.signal.windows import blackman, blackmanharris, boxcar, kaiser
+from scipy.signal.windows import blackman, blackmanharris, boxcar, kaiser, tukey
 
 def rect(x):
     return np.where(np.abs(x)<=0.5, 1, 0)
@@ -127,6 +127,8 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
             window = kaiser(height, beta=14)
         elif window_function == 'blackmanharris':
             window = blackmanharris(height)
+        elif window_function == 'tukey':
+            window = tukey(height, alpha=0.5)
         else:
             print("Window function sounds made up to me. Using Hanning window by default.")
             window = np.hanning(height)
