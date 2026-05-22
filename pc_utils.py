@@ -29,7 +29,7 @@ def iq_conversion(pola):
     iq_samples = pola * phase_all_samples[:pola.size]
     return iq_samples
 
-def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_rate, pri, alpha, tle, telescope, Tp, freq, window_function):
+def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_rate, pri, alpha, tle, telescope, Tp, freq, zero_pad, window_function):
     '''
     Inputs:
     height: CPI size in pulses
@@ -119,6 +119,12 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
         peak_idx = np.argmax(cpi_power)
         peak_history.append(peak_idx)
         range_cut = cdat_pc[:, peak_idx] 
+
+        #adding zero-padding
+        cdat_padded = np.zeros((range_cut.shape[0]+zero_pad, range_cut.shape[1]))
+
+        for i in range(range_cut.shape[1]):
+            cdat_padded[:, i] = np.pad(range_cut[:, i], (zero_pad//2, zero_pad//2), mode='constant')
         
         # Micro-Doppler (Slow-time FFT)
         if window_function == 'hanning':
@@ -139,11 +145,11 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
             print("Window function sounds made up to me. Using Hanning window by default.")
             window = np.hanning(height)
 
-        doppler_spectrum = np.fft.fftshift(np.fft.fft(range_cut * window))
+        doppler_spectrum = np.fft.fftshift(np.fft.fft(cdat_padded * window))
         spectrogram[:, n] = np.abs(doppler_spectrum)**2
     return rcm_map, spectrogram, peak_history, number_of_strips
     
-def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_name: str, height: int, overlap_factor, channel: int, window_function: str):
+def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_name: str, height: int, overlap_factor, channel: int, window_function: str, padding: int):
     '''
     Inputs:
     to_be_plotted: 2D array of values to be plotted (e.g. RCM map or spectrogram)
@@ -166,6 +172,6 @@ def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_
     plt.ylabel(ylabel)
     plt.colorbar(label='Power (dB)')
     plt.tight_layout()
-    plt.savefig('./'+title+ '_' + target_name + '_' + str(height) + '_'+str(overlap_factor)+'channel_'+str(channel)+'_'+str(window_function)+'.png')
+    plt.savefig('./'+title+ '_' + target_name + '_' + str(height) + '_'+str(overlap_factor)+'channel_'+str(channel)+'_'+str(window_function)+'_padding_'+str(padding)+'.png')
     plt.close()
     return
