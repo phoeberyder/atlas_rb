@@ -123,25 +123,27 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
         #adding zero-padding
         range_cut_padded = np.zeros(range_cut.shape[0]+zero_pad, dtype=complex)
         range_cut_padded = np.pad(range_cut_padded, (zero_pad//2, zero_pad//2), mode='constant')
+
+        window_size = range_cut.shape[0]
         
         # Micro-Doppler (Slow-time FFT)
         if window_function == 'hanning':
-            window = np.hanning(height)
+            window = np.hanning(window_size)
         elif window_function == 'hamming':
-            window = np.hamming(height)
+            window = np.hamming(window_size)
         elif window_function == 'blackman':
-            window = np.blackman(height)
+            window = np.blackman(window_size)
         elif window_function == 'boxcar':  
-            window = boxcar(height)
+            window = boxcar(window_size)
         elif window_function == 'kaiser':
-            window = kaiser(height, beta=14)
+            window = kaiser(window_size, beta=14)
         elif window_function == 'blackmanharris':
-            window = blackmanharris(height)
+            window = blackmanharris(window_size)
         elif window_function == 'tukey':
-            window = tukey(height, alpha=0.5)
+            window = tukey(window_size, alpha=0.5)
         else:
             print("Window function sounds made up to me. Using Hanning window by default.")
-            window = np.hanning(height)
+            window = np.hanning(window_size)
 
         doppler_spectrum = np.fft.fftshift(np.fft.fft(range_cut_padded * window))
         spectrogram[:, n] = np.abs(doppler_spectrum)**2
