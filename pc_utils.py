@@ -125,7 +125,7 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
         range_cut_padded = np.pad(range_cut_padded, (zero_pad//2, zero_pad//2), mode='constant')
 
         window_size = range_cut_padded.shape[0]
-        print(window_size)
+        print('window_size:', window_size)
         
         # Micro-Doppler (Slow-time FFT)
         if window_function == 'hanning':
@@ -146,6 +146,7 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
             print("Window function sounds made up to me. Using Hanning window by default.")
             window = np.hanning(window_size)
 
+        print('window size:', len(window))
         doppler_spectrum = np.fft.fftshift(np.fft.fft(range_cut_padded * window))
         spectrogram[:, n] = np.abs(doppler_spectrum)**2
     return rcm_map, spectrogram, peak_history, number_of_strips
