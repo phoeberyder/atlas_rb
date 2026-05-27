@@ -122,7 +122,7 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
 
         #adding zero-padding
         range_cut_padded = np.zeros(range_cut.shape[0]+zero_pad, dtype=complex)
-        range_cut_padded = np.pad(range_cutpadded, (zero_pad//2, zero_pad//2), mode='constant')
+        range_cut_padded = np.pad(range_cut_padded, (zero_pad//2, zero_pad//2), mode='constant')
         
         # Micro-Doppler (Slow-time FFT)
         if window_function == 'hanning':
