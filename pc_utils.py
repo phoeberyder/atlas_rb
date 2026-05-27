@@ -125,6 +125,7 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
         range_cut_padded = np.pad(range_cut_padded, (zero_pad//2, zero_pad//2), mode='constant')
 
         window_size = range_cut.shape[0]
+        print(window_size)
         
         # Micro-Doppler (Slow-time FFT)
         if window_function == 'hanning':
