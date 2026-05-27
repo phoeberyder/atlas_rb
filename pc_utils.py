@@ -63,7 +63,7 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
         number_of_strips = int((len(iq_samples) - startoffset - (height * points)) // cpi_jump_samples)
 
     rcm_map = np.zeros((points, number_of_strips))
-    spectrogram = np.zeros((height, number_of_strips))
+    
     peak_history = []
 
     print(f'Total strips to process: {number_of_strips}')
@@ -148,6 +148,7 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
 
         print('window size:', len(window))
         doppler_spectrum = np.fft.fftshift(np.fft.fft(range_cut_padded * window))
+        spectrogram = np.zeros((window_size, number_of_strips))
         spectrogram[:, n] = np.abs(doppler_spectrum)**2
     return rcm_map, spectrogram, peak_history, number_of_strips
     
