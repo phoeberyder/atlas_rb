@@ -83,7 +83,7 @@ def pc_and_spectrogram(target, height, points, overlap_factor, iq_samples, samp_
         elif target == 'atlas':
             t_tle = ts.utc(2026, 2, 18, 14, 50, s_offset)
         range_rate = range_finder_general(tle, t_tle, telescope)[1]
-        tau_dot = range_rate / c
+        tau_dot = 0 #range_rate / c
         
         # Create template: baseband * chirp * envelope
         t_pulse = np.linspace(0, pri, points, endpoint=False)
@@ -170,6 +170,6 @@ def plotter(to_be_plotted, title: str, xlabel: str, ylabel: str, extent, target_
     plt.ylabel(ylabel)
     plt.colorbar(label='Power (dB)')
     plt.tight_layout()
-    plt.savefig('./'+title+ '_' + target_name + '_' + str(height) + '_'+str(overlap_factor)+'channel_'+str(channel)+'_'+str(window_function)+'_padding_'+str(padding)+'.png')
+    plt.savefig('./'+title+ '_' + target_name + '_' + str(height) + '_'+str(overlap_factor)+'channel_'+str(channel)+'_'+str(window_function)+'_padding_'+str(padding)+'_nodoppler.png')
     plt.close()
     return
