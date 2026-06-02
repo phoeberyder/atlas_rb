@@ -105,37 +105,39 @@ for n in range(number_of_strips):
     # Extract the stable range-cut for the spectrogram
     peak_idx = np.argmax(cpi_power)
     peak_history.append(peak_idx)
-    range_cut = cdat_pc[:, peak_idx] 
+    # range_cut = cdat_pc[:, peak_idx] 
 
-    #adding zero-padding
-    # range_cut_padded = np.zeros(range_cut.shape[0]+zero_pad, dtype=complex)
-    range_cut_padded = np.pad(range_cut, (zero_pad//2, zero_pad//2), mode='constant')
+    # #adding zero-padding
+    # # range_cut_padded = np.zeros(range_cut.shape[0]+zero_pad, dtype=complex)
+    # range_cut_padded = np.pad(range_cut, (zero_pad//2, zero_pad//2), mode='constant')
 
     
-    print('window_size:', window_size)
+    # print('window_size:', window_size)
     
-    # Micro-Doppler (Slow-time FFT)
-    if window_function == 'hanning':
-        window = np.hanning(window_size)
-    elif window_function == 'hamming':
-        window = np.hamming(window_size)
-    elif window_function == 'blackman':
-        window = np.blackman(window_size)
-    elif window_function == 'boxcar':  
-        window = boxcar(window_size)
-    elif window_function == 'kaiser':
-        window = kaiser(window_size, beta=14)
-    elif window_function == 'blackmanharris':
-        window = blackmanharris(window_size)
-    elif window_function == 'tukey':
-        window = tukey(window_size, alpha=0.5)
-    else:
-        print("Window function sounds made up to me. Using Hanning window by default.")
-        window = np.hanning(window_size)
+    # # Micro-Doppler (Slow-time FFT)
+    # if window_function == 'hanning':
+    #     window = np.hanning(window_size)
+    # elif window_function == 'hamming':
+    #     window = np.hamming(window_size)
+    # elif window_function == 'blackman':
+    #     window = np.blackman(window_size)
+    # elif window_function == 'boxcar':  
+    #     window = boxcar(window_size)
+    # elif window_function == 'kaiser':
+    #     window = kaiser(window_size, beta=14)
+    # elif window_function == 'blackmanharris':
+    #     window = blackmanharris(window_size)
+    # elif window_function == 'tukey':
+    #     window = tukey(window_size, alpha=0.5)
+    # else:
+    #     print("Window function sounds made up to me. Using Hanning window by default.")
+    #     window = np.hanning(window_size)
 
-    # print('window size:', len(window))
-    doppler_spectrum = np.fft.fftshift(np.fft.fft(range_cut_padded * window))
+    # # print('window size:', len(window))
+    # doppler_spectrum = np.fft.fftshift(np.fft.fft(range_cut_padded * window))
     
-    spectrogram[:, n] = np.abs(doppler_spectrum)**2
+    # spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./spectrogram_intelsat_128cpi_1sampoverlap_tukey_128pad_bulkphase0.npy', spectrogram)
+# np.save('./spectrogram_intelsat_128cpi_1sampoverlap_tukey_128pad_bulkphase0.npy', spectrogram)
+print('No bulk phase correction /n')
+print(peak_history)
