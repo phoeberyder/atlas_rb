@@ -70,7 +70,7 @@ for n in range(number_of_strips):
     elif target == 'atlas':
         t_tle = ts.utc(2026, 2, 18, 14, 50, s_offset)
     range_rate = range_finder_general(tle, t_tle, telescope)[1]
-    tau_dot = range_rate / c
+    tau_dot = 0 #range_rate / c
     
     # Create template: baseband * chirp * envelope
     t_pulse = np.linspace(0, pri, points, endpoint=False)
@@ -96,7 +96,7 @@ for n in range(number_of_strips):
         bulk_phase = np.exp(-1j * 2 * np.pi * f_d * start_sec)
         
         # applying doppler correction
-        cdat_pc[i] = compressed_pulse #* bulk_phase
+        cdat_pc[i] = compressed_pulse * bulk_phase
     
     # Average power
     cpi_power = np.mean(np.abs(cdat_pc)**2, axis=0)
@@ -139,5 +139,5 @@ for n in range(number_of_strips):
     # spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
 # np.save('./spectrogram_intelsat_128cpi_1sampoverlap_tukey_128pad_bulkphase0.npy', spectrogram)
-print('No bulk phase correction /n')
+print('No tau_dot /n')
 print(peak_history)
