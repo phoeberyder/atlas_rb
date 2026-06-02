@@ -140,4 +140,4 @@ for n in range(number_of_strips):
     
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./spectrogram___intelsat_128cpi_1sampoverlap_tukey_128pad.npy', spectrogram)
+np.save('./spectrogram___intelsat_128cpi_1sampoverlap_tukey_128pad_300_strips.npy', spectrogram)
