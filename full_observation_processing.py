@@ -39,7 +39,7 @@ iq_samples = iq_conversion(pola)
 print('Converted into IQ samples.')
 
 cpi_jump_samples = (height * points)-1
-number_of_strips = 66
+number_of_strips = 300
 target = 'intelsat'
 telescope = 'lovell'
 
