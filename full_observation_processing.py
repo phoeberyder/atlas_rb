@@ -7,7 +7,7 @@ from scipy.signal.windows import tukey, blackmanharris, boxcar, kaiser
 
 cpi = 128
 channel = 0
-infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdif'
+infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdifa'
 window_function = 'tukey'
 zero_pad = 128
 
@@ -68,7 +68,7 @@ for n in range(number_of_strips):
     # Update TLE range rate for the start of this CPI
     s_offset = (start_idx / samp_rate)
     if target == 'intelsat':
-        t_tle = ts.utc(2025, 2, 5, 13, 50, s_offset)
+        t_tle = ts.utc(2025, 2, 5, 13, 50, s_offset+1)
     elif target == 'atlas':
         t_tle = ts.utc(2026, 2, 18, 14, 50, s_offset)
     range_rate = range_finder_general(tle, t_tle, telescope)[1]
