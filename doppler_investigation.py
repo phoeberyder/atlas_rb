@@ -70,7 +70,7 @@ for n in range(number_of_strips):
     elif target == 'atlas':
         t_tle = ts.utc(2026, 2, 18, 14, 50, s_offset)
     range_rate = range_finder_general(tle, t_tle, telescope)[1]
-    tau_dot = 0 #range_rate / c
+    tau_dot = range_rate / c
     
     # Create template: baseband * chirp * envelope
     t_pulse = np.linspace(0, pri, points, endpoint=False)
@@ -85,7 +85,7 @@ for n in range(number_of_strips):
         pulse_fft = np.fft.fft(cpi_data[i])
         
         # Calculating RCM Correction
-        delta_tau = 2 * (range_rate * start_sec) / c     # change in range rate since beginning of CPI, converted to time delay
+        delta_tau = 0 #2 * (range_rate * start_sec) / c     # change in range rate since beginning of CPI, converted to time delay
         rcm_shift = np.exp(1j * 2 * np.pi * freqs * delta_tau)          #applying RCM correction in the frequency domain using linear phase shift corresponding to the change in range delay over the CPI duration
         
         # Pulse Compression and RCM shift
@@ -138,4 +138,4 @@ for n in range(number_of_strips):
     
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./spectrogram_intelsat_128cpi_1sampoverlap_tukey_128pad_taudot0.npy', spectrogram)
+np.save('./spectrogram_intelsat_128cpi_1sampoverlap_tukey_128pad_deltatau0.npy', spectrogram)
