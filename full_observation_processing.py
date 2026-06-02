@@ -46,7 +46,7 @@ telescope = 'lovell'
 c = 299792458
 ts = load.timescale()
 freqs = np.fft.fftfreq(points, d=1/samp_rate) # Used for Fourier Shift RCM correction
-startoffset = int(samp_rate * 100)
+startoffset = 0#int(samp_rate * 100)
 number_of_samples_in_whole_dataset = len(iq_samples) - startoffset
     
 
