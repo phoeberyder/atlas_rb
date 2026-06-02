@@ -85,7 +85,7 @@ for n in range(number_of_strips):
         pulse_fft = np.fft.fft(cpi_data[i])
         
         # Calculating RCM Correction
-        delta_tau = 0 #2 * (range_rate * start_sec) / c     # change in range rate since beginning of CPI, converted to time delay
+        delta_tau = 2 * (range_rate * start_sec) / c     # change in range rate since beginning of CPI, converted to time delay
         rcm_shift = np.exp(1j * 2 * np.pi * freqs * delta_tau)          #applying RCM correction in the frequency domain using linear phase shift corresponding to the change in range delay over the CPI duration
         
         # Pulse Compression and RCM shift
@@ -96,7 +96,7 @@ for n in range(number_of_strips):
         bulk_phase = np.exp(-1j * 2 * np.pi * f_d * start_sec)
         
         # applying doppler correction
-        cdat_pc[i] = compressed_pulse * bulk_phase
+        cdat_pc[i] = compressed_pulse #* bulk_phase
     
     # Average power
     cpi_power = np.mean(np.abs(cdat_pc)**2, axis=0)
@@ -138,4 +138,4 @@ for n in range(number_of_strips):
     
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./spectrogram_intelsat_128cpi_1sampoverlap_tukey_128pad_deltatau0.npy', spectrogram)
+np.save('./spectrogram_intelsat_128cpi_1sampoverlap_tukey_128pad_bulkphase0.npy', spectrogram)
