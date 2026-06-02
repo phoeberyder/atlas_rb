@@ -39,7 +39,7 @@ iq_samples = iq_conversion(pola)
 print('Converted into IQ samples.')
 
 cpi_jump_samples = (height * points)-1
-number_of_strips = 300
+number_of_strips = 106
 target = 'intelsat'
 telescope = 'lovell'
 
@@ -140,4 +140,4 @@ for n in range(number_of_strips):
     
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./spectrogram___intelsat_128cpi_1sampoverlap_tukey_128pad_300_strips.npy', spectrogram)
+np.save('./spectrogram___intelsat_128cpi_1sampoverlap_tukey_128pad_106_strips.npy', spectrogram)
