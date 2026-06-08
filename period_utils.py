@@ -10,7 +10,7 @@ def peakfindergeneral(x, y):
     Outputs:
         peak_freqs
         peak_periods'''
-    peaks = find_peaks(np.power, height=np.max(y)*0.1)
+    peaks = find_peaks(y, height=np.max(y)*0.1)
     peak_freqs = x[peaks[0]]
     print("Peak frequencies (Hz):", peak_freqs)
     peak_periods = 1/peak_freqs
