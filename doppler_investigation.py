@@ -48,7 +48,7 @@ print('Converted into IQ samples.')
 cpi_jump_samples = (height * points)-1
 number_of_strips = 53
 target = 'atlas'
-telescope = 'mk2'
+telescope = 'mark'
 
 freqs = np.fft.fftfreq(points, d=1/samp_rate) # Used for Fourier Shift RCM correction
 startoffset = int(samp_rate * 100)
