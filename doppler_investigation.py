@@ -24,7 +24,7 @@ tle_line_1 = '1 40731U 15033B   26046.96407114  .00000009  00000-0  00000+0 0  9
 tle_line_2 = '2 40731  54.6696 288.5525 0237286   9.2718 351.2385  1.90866878 73834'
 ts = load.timescale()
 atlas_tle = EarthSatellite(tle_line_1, tle_line_2, 'atlas', ts)
-tle = altas_tle
+tle = atlas_tle
 
 # input parameters       
 bw = 8e6        
