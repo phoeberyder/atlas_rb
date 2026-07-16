@@ -7,29 +7,29 @@ from scipy.signal.windows import tukey, blackmanharris, boxcar, kaiser
 
 cpi = 128
 channel = 0
-# infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdif'
-infilename = '/share/nas2/pryder/realtime_test_1/vdifs/SD20003_20260218_mk2_1295MHz_atlasrb.vdif'
+infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdif'
+# infilename = '/share/nas2/pryder/realtime_test_1/vdifs/SD20003_20260218_mk2_1295MHz_atlasrb.vdif'
 window_function = 'tukey'
 zero_pad = 128
 
 # inputting TLE data for intelsat 33e
-# tle_line_1 = '1 61995U 16053M   25035.62796428  .00000095  00000-0  00000-0 0  9998'
-# tle_line_2 = '2 61995   0.2642  88.1708 0053675 268.4745   3.2920  1.01033442  1106'
-# target_name = 'intelsat'
-# ts = load.timescale()
-# intelsat_tle = EarthSatellite(tle_line_1, tle_line_2, target_name, ts)
-# tle = intelsat_tle
-
-tle_line_1 = '1 40731U 15033B   26046.96407114  .00000009  00000-0  00000+0 0  9995'
-tle_line_2 = '2 40731  54.6696 288.5525 0237286   9.2718 351.2385  1.90866878 73834'
+tle_line_1 = '1 61995U 16053M   25035.62796428  .00000095  00000-0  00000-0 0  9998'
+tle_line_2 = '2 61995   0.2642  88.1708 0053675 268.4745   3.2920  1.01033442  1106'
+target_name = 'intelsat'
 ts = load.timescale()
-atlas_tle = EarthSatellite(tle_line_1, tle_line_2, 'atlas', ts)
-tle = atlas_tle
+intelsat_tle = EarthSatellite(tle_line_1, tle_line_2, target_name, ts)
+tle = intelsat_tle
+
+# tle_line_1 = '1 40731U 15033B   26046.96407114  .00000009  00000-0  00000+0 0  9995'
+# tle_line_2 = '2 40731  54.6696 288.5525 0237286   9.2718 351.2385  1.90866878 73834'
+# ts = load.timescale()
+# atlas_tle = EarthSatellite(tle_line_1, tle_line_2, 'atlas', ts)
+# tle = atlas_tle
 
 # input parameters       
 bw = 8e6        
 Tp = 800e-6    
-pri = 20.506e-3 #19.7e-3
+pri = 19.7e-3 #20.506e-3 #19.7e-3
 freq = 1295e6
 c = 299792458
 samp_rate = 16e6
@@ -146,5 +146,5 @@ for n in range(number_of_strips):
 #     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
 # np.save('./spectrogram_intelsat_128cpi_1sampoverlap_tukey_128pad_bulkphase0.npy', spectrogram)
-print('everything /n')
+print('everything \n')
 print(peak_history)
