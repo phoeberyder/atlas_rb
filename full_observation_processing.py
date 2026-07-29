@@ -7,7 +7,7 @@ from scipy.signal.windows import tukey, blackmanharris, boxcar, kaiser
 
 cpi = 128
 channel = 0
-infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdifc'
+infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdifb'
 window_function = 'tukey'
 zero_pad = 128
 
@@ -113,7 +113,7 @@ for n in range(number_of_strips):
     peak_history.append(peak_idx)
     # adding more consistency in range peak
     # _ = 128075, a = 192082, b = 27303, c = 179346
-    expected_peak = 179346
+    expected_peak = 27303
     peak_offset = expected_peak- peak_idx
     # print(peak_offset)
     if np.abs(peak_offset)<10:
@@ -156,4 +156,4 @@ for n in range(number_of_strips):
     
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./spectrogram_c_intelsat_128cpi_1sampoverlap_tukey_128pad_106_strips_pol0.npy', spectrogram)
+np.save('./spectrogram_b_intelsat_128cpi_1sampoverlap_tukey_128pad_106_strips_pol0.npy', spectrogram)
