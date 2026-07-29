@@ -7,7 +7,7 @@ from scipy.signal.windows import tukey, blackmanharris, boxcar, kaiser
 
 cpi = 128
 channel = 1
-infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdif'
+infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdifa'
 window_function = 'tukey'
 zero_pad = 128
 
@@ -112,8 +112,9 @@ for n in range(number_of_strips):
     peak_idx = np.argmax(cpi_power)
     peak_history.append(peak_idx)
     # adding more consistency in range peak
-    # _ = 
-    peak_offset = 128075- peak_idx
+    # _ = 128075, a = 192082, b = 27303, c = 179346
+    expected_peak = 192082
+    peak_offset = expected_peak- peak_idx
     # print(peak_offset)
     if np.abs(peak_offset)<10:
         # print('\n accepted')
@@ -122,7 +123,7 @@ for n in range(number_of_strips):
     else:
         # print('\n rejected')
         # rejected +=1
-        range_cut = cleaned_cdat_pc[:, 128075] 
+        range_cut = cleaned_cdat_pc[:, expected_peak] 
 
     #adding zero-padding
     # range_cut_padded = np.zeros(range_cut.shape[0]+zero_pad, dtype=complex)
@@ -155,4 +156,4 @@ for n in range(number_of_strips):
     
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./spectrogram___intelsat_128cpi_1sampoverlap_tukey_128pad_106_strips_pol1.npy', spectrogram)
+np.save('./spectrogram_a_intelsat_128cpi_1sampoverlap_tukey_128pad_106_strips_pol1.npy', spectrogram)
