@@ -6,8 +6,8 @@ from pc_utils import open_vdif, iq_conversion
 from scipy.signal.windows import tukey, blackmanharris, boxcar, kaiser
 
 cpi = 128
-channel = 0
-infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdifc'
+channel = 1
+infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdif'
 window_function = 'tukey'
 zero_pad = 128
 
@@ -22,28 +22,27 @@ tle = intelsat_tle
 # input parameters       
 bw = 8e6        
 Tp = 800e-6    
-pri = 19.7e-3
+pri = 19.7e-3  #0.0197
 freq = 1295e6
 c = 299792458
 samp_rate = 16e6
 alpha = bw/Tp   
 height =cpi # CPI Size
-points = int(samp_rate * pri)
+points = int(samp_rate * pri)    #315,200
 
 # Open VDIF
-pola, header = open_vdif(infilename, channel)
+pola, header = open_vdif(infilename, channel) #length is 4,277,760,000
 print('VDIF opened.')
 
 # Convert to IQ
 iq_samples = iq_conversion(pola)
 print('Converted into IQ samples.')
 
-cpi_jump_samples = (height * points)-1
+cpi_jump_samples = (height * points)         #40,345,600
 number_of_strips = 106
 target = 'intelsat'
 telescope = 'lovell'
 
-c = 299792458
 ts = load.timescale()
 freqs = np.fft.fftfreq(points, d=1/samp_rate) # Used for Fourier Shift RCM correction
 startoffset = 0#int(samp_rate * 100)
@@ -100,14 +99,30 @@ for n in range(number_of_strips):
         # applying doppler correction
         cdat_pc[i] = compressed_pulse * bulk_phase
     
+    lsv, S, rsv = np.linalg.svd(cdat_pc, full_matrices=False)
+    S_cleaned = S.copy()
+    number_dop_com = 2
+    S_cleaned[:number_dop_com] = 0.0
+    cleaned_cdat_pc = np.dot(lsv * S_cleaned, rsv)
     # Average power
-    cpi_power = np.mean(np.abs(cdat_pc)**2, axis=0)
+    cpi_power = np.mean(np.abs(cleaned_cdat_pc)**2, axis=0)
     rcm_map[:, n] = cpi_power
     
     # Extract the stable range-cut for the spectrogram
     peak_idx = np.argmax(cpi_power)
     peak_history.append(peak_idx)
-    range_cut = cdat_pc[:, peak_idx] 
+    # adding more consistency in range peak
+    # _ = 
+    peak_offset = 128075- peak_idx
+    # print(peak_offset)
+    if np.abs(peak_offset)<10:
+        # print('\n accepted')
+        # accepted +=1
+        range_cut = cleaned_cdat_pc[:, peak_idx] 
+    else:
+        # print('\n rejected')
+        # rejected +=1
+        range_cut = cleaned_cdat_pc[:, 128075] 
 
     #adding zero-padding
     # range_cut_padded = np.zeros(range_cut.shape[0]+zero_pad, dtype=complex)
@@ -140,4 +155,4 @@ for n in range(number_of_strips):
     
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./spectrogram_c_intelsat_128cpi_1sampoverlap_tukey_128pad_106_strips.npy', spectrogram)
+np.save('./spectrogram___intelsat_128cpi_1sampoverlap_tukey_128pad_106_strips_pol1.npy', spectrogram)
