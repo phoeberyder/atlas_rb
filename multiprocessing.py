@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from schedule_utils import range_finder_general
 from skyfield.api import load, EarthSatellite, wgs84
 from pc_utils import rect, open_vdif, iq_conversion, pc_and_spectrogram, plotter
 from scipy.ndimage import shift
