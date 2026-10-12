@@ -29,7 +29,7 @@ alpha = bw/Tp
 height = 128 # CPI Size
 startoffset = int(samp_rate * 100)
 # infilename = '/share/nas2/pryder/realtime_test_1/vdifs/SD20003_20260218_mk2_1295MHz_atlasrb.vdif'
-infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdif'
+infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdifa'
 
 # --- Open and Unpack VDIF ---
 with open(infilename) as infile:
