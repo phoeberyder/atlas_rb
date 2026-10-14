@@ -161,30 +161,31 @@ for n in range(number_of_strips):
     peak_power.append(incoho_sum[peak_idx])
     average_noise.append(np.median(incoho_sum))
 
-plt.plot(strip_time, peak_power, label='Peak Power', color='blue')
-plt.plot(strip_time, average_noise, label='Average Noise', color='orange')
-plt.xlabel('Time (s)')
-plt.ylabel('Power')
-plt.title('Peak Power and Average Noise Over Time')
-plt.legend()
-plt.savefig('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_average_noise_over_time.png')
-plt.clf()
+# plt.plot(strip_time, peak_power, label='Peak Power', color='blue')
+# plt.plot(strip_time, average_noise, label='Average Noise', color='orange')
+# plt.xlabel('Time (s)')
+# plt.ylabel('Power')
+# plt.title('Peak Power and Average Noise Over Time')
+# plt.legend()
+# plt.savefig('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_average_noise_over_time.png')
+# plt.clf()
 
-plt.plot(strip_time, peak_index, label='Peak Index', color='green')
-plt.xlabel('Time (s)')
-plt.ylabel('Peak Index')
-plt.legend()
-plt.savefig('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time.png')
-plt.clf()
-
-
-plt.plot(strip_time, tle_range_bin, label='TLE Range Bin', color='red')
-plt.xlabel('Time (s)')
-plt.ylabel('TLE Range Bin')
-plt.legend()
-plt.savefig('/share/nas2/pryder/tumbling_git/Range rate compensation/tle_range_bin_over_time.png')
+# plt.plot(strip_time, peak_index, label='Peak Index', color='green')
+# plt.xlabel('Time (s)')
+# plt.ylabel('Peak Index')
+# plt.legend()
+# plt.savefig('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time.png')
+# plt.clf()
 
 
+# plt.plot(strip_time, tle_range_bin, label='TLE Range Bin', color='red')
+# plt.xlabel('Time (s)')
+# plt.ylabel('TLE Range Bin')
+# plt.legend()
+# plt.savefig('/share/nas2/pryder/tumbling_git/Range rate compensation/tle_range_bin_over_time.png')
 
 
-    
+
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_0.npy', peak_index)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_0.npy', peak_power)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_0.npy', average_noise)
