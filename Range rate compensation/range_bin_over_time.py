@@ -28,6 +28,7 @@ height =cpi # CPI Size
 points = int(samp_rate * pri)
 infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdifa' #second vdif
 channel = 0
+start_strip = 800
 
 # Open VDIF
 pola, header = open_vdif(infilename, channel)
@@ -63,7 +64,7 @@ bin_spacing_m = c/(samp_rate)
 R_tle = np.zeros(height)
 target = intelsat_tle
 for i in range(height):
-        start_idx = 2400+(i*overlap)
+        start_idx = start_strip+(i*overlap)
         s_offset = (start_idx / samp_rate) + 1.658 + (i * pri)
         t = ts.utc(2025, 2, 5, 13, 50, s_offset)
         sat_pos = target.at(t).position.km
@@ -87,7 +88,7 @@ for i in range(height):
 
 for n in range(number_of_strips):
     print(n)
-    start_idx = (n*overlap)
+    start_idx = (n*overlap) + start_strip
     end_idx = start_idx + (height * points)
     cpi_data = iq_samples[start_idx:end_idx].reshape((height, points))
 
@@ -186,6 +187,6 @@ for n in range(number_of_strips):
 
 
 
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_2400.npy', peak_index)
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_2400.npy', peak_power)
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_2400.npy', average_noise)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_'+str(start_strip)+'.npy', peak_index)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_'+str(start_strip)+'.npy', peak_power)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_'+str(start_strip)+'.npy', average_noise)
