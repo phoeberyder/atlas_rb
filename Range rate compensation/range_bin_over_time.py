@@ -1,3 +1,6 @@
+cd ..
+print(pwd)
+
 import numpy as np
 import matplotlib.pyplot as plt
 from schedule_utils import range_finder_general
