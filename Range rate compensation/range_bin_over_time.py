@@ -63,7 +63,7 @@ bin_spacing_m = c/(samp_rate)
 R_tle = np.zeros(height)
 target = intelsat_tle
 for i in range(height):
-        start_idx = 1600+(i*overlap)
+        start_idx = 2400+(i*overlap)
         s_offset = (start_idx / samp_rate) + 1.658 + (i * pri)
         t = ts.utc(2025, 2, 5, 13, 50, s_offset)
         sat_pos = target.at(t).position.km
@@ -186,6 +186,6 @@ for n in range(number_of_strips):
 
 
 
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_1600.npy', peak_index)
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_1600.npy', peak_power)
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_1600.npy', average_noise)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_2400.npy', peak_index)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_2400.npy', peak_power)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_2400.npy', average_noise)
