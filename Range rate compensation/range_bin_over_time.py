@@ -1,5 +1,6 @@
-cd ..
-print(pwd)
+import os
+file_path = os.path.realpath(__file__)
+print("Current file path:", file_path)
 
 import numpy as np
 import matplotlib.pyplot as plt
