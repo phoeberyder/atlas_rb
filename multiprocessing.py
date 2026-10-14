@@ -42,9 +42,36 @@ overlap = points
 rough_period = 15.6
 time_of_one_cpi = pri*cpi #in seconds
 points_of_one_period = rough_period/time_of_one_cpi * points
-number_of_strips = int(points_of_one_period/(overlap)) # number of strips in one period
+number_of_strips = int(points_of_one_period/(overlap))*100 # number of strips in one period
 print(number_of_strips)
 spectrogram = np.zeros((height*2, number_of_strips))
+
+#adding an initial idea of where the signal is going to be based on the tle
+bin_spacing_m = c/(samp_rate)
+R_tle = np.zeros(height)
+target = intelsat_tle
+for i in range(height):
+        start_idx = (i*overlap)
+        s_offset = (start_idx / samp_rate) + 1.658 + (i * pri)
+        t = ts.utc(2025, 2, 5, 13, 50, s_offset)
+        sat_pos = target.at(t).position.km
+
+        # Transmitter and receiver locations
+        mhr = wgs84.latlon(42.6, 288.5)
+        rx = wgs84.latlon(53.2365, -2.3087)
+        tx_pos = mhr.at(t).position.km
+        rx_pos = rx.at(t).position.km
+
+        difference_rx = (target - rx)
+        difference_tx = (target - mhr)
+
+        topocentric_rx = (difference_rx.at(t))
+        topocentric_tx = (difference_tx.at(t))
+
+        range_rx_m = topocentric_rx.distance().m
+        range_tx_m = topocentric_tx.distance().m
+        range_m = range_rx_m + range_tx_m
+        R_tle[i] = range_m
 
 for n in range(number_of_strips):
     print(n)
@@ -54,7 +81,6 @@ for n in range(number_of_strips):
 
     # Update TLE range rate for the start of this CPI
     s_offset = (start_idx / samp_rate) + 1.658 #offset from 50 from start of file
-    target = intelsat_tle
     t = ts.utc(2025, 2, 5, 13, 50, s_offset)
     sat_pos = target.at(t).position.km
 
@@ -69,6 +95,19 @@ for n in range(number_of_strips):
 
     topocentric_rx = (difference_rx.at(t))
     topocentric_tx = (difference_tx.at(t))
+
+    range_rx_m = topocentric_rx.distance().m
+    range_tx_m = topocentric_tx.distance().m
+    range_m = range_rx_m + range_tx_m
+    tau = range_m/c
+    range_bin = int(np.floor(range_m/(2*bin_spacing_m)))
+    delay_samples = tau * samp_rate
+    print('approx range bin: ', range_bin)
+
+    p = np.polyfit(np.linspace(0, pri, height), R_tle, 2)
+    R_fit = np.polyval(p, np.linspace(0, pri, height))
+    dR = R_fit - R_fit[0]
+    d_bins = dR / (2*bin_spacing_m)
 
     _, _, the_range, _, _, range_rate = topocentric_rx.frame_latlon_and_rates(rx)
     _, _, the_range_tx, _, _, range_rate_tx = topocentric_tx.frame_latlon_and_rates(mhr)
@@ -86,26 +125,27 @@ for n in range(number_of_strips):
     for i in range(height):
         start_sec = i * pri
         pulse_fft = np.fft.fft(cpi_data[i])
-        rowshift = range_rate*np.arange(height)*10
+        # rowshift = range_rate*np.arange(height)
         
-        # Calculating RCM Correction
-        delta_tau = 2 * (range_rate * start_sec) / c     # change in range rate since beginning of CPI, converted to time delay
-        rcm_shift = np.exp(1j * 2 * np.pi * freqs * delta_tau)          #applying RCM correction in the frequency domain using linear phase shift corresponding to the change in range delay over the CPI duration
+        # # Calculating RCM Correction
+        # delta_tau = 2 * (range_rate * start_sec) / c     # change in range rate since beginning of CPI, converted to time delay
+        # rcm_shift = np.exp(1j * 2 * np.pi * freqs * delta_tau)          #applying RCM correction in the frequency domain using linear phase shift corresponding to the change in range delay over the CPI duration
         
-        # Pulse Compression and RCM shift
-        compressed_pulse = np.fft.ifft(pulse_fft * np.conj(template_fft) * rcm_shift)
+        # # Pulse Compression and RCM shift
+        compressed_pulse = np.fft.ifft(pulse_fft * np.conj(template_fft))
         
-        # Doppler Phase Correction
-        f_d = -2 * range_rate * freq / c
-        bulk_phase = np.exp(-1j * 2 * np.pi * f_d * start_sec)
-        cdat_pc[i] = shift(compressed_pulse * bulk_phase, -rowshift[i], mode='constant', order=1)
+        # # Doppler Phase Correction
+        # f_d = -2 * range_rate * freq / c
+        # bulk_phase = np.exp(-1j * 2 * np.pi * f_d * start_sec)
+        cdat_pc[i] = shift(compressed_pulse, -d_bins[i], mode='constant', order=1)
     
     # cpi_power = np.mean(np.abs(cdat_pc)**2, axis=0)
     power = (np.abs(cdat_pc))**2
     incoho_sum = np.sum(power, axis=0)
-    peak_idx = np.argmax(incoho_sum)
-    # peak_idx = 283641 - n*10000
-    print(peak_idx)
+    # peak_idx = np.argmax(incoho_sum[283641-500:283641+500]) + 283641 - 500
+    # peak_idx = np.argmax(incoho_sum)
+    peak_idx = 192081
+    # print('peak index: ', peak_idx)
     range_cut = cdat_pc[:, peak_idx] 
     zero_pad = height
     range_cut_padded = np.pad(range_cut, (zero_pad//2, zero_pad//2), mode='constant')
