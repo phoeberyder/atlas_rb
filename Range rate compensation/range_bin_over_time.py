@@ -37,6 +37,7 @@ print('Converted into IQ samples.')
 peak_index = []
 peak_power = []
 average_noise = []
+tle_range_bin = []
 
 max_velocity = c / (4 * 19.7e-3* (freq))
 
@@ -108,6 +109,7 @@ for n in range(number_of_strips):
     range_m = range_rx_m + range_tx_m
     tau = range_m/c
     range_bin = int(np.floor(range_m/(2*bin_spacing_m)))
+    tle_range_bin.append(range_bin)
     delay_samples = tau * samp_rate
     print('approx range bin: ', range_bin)
 
@@ -162,16 +164,21 @@ plt.ylabel('Power')
 plt.title('Peak Power and Average Noise Over Time')
 plt.legend()
 plt.savefig('peak_power_average_noise_over_time.png')
+plt.clf()
 
 plt.plot(strip_time, peak_index, label='Peak Index', color='green')
 plt.xlabel('Time (s)')
 plt.ylabel('Peak Index')
 plt.legend()
 plt.savefig('peak_index_over_time.png')
+plt.clf()
 
 
- 
-
+plt.plot(strip_time, tle_range_bin, label='TLE Range Bin', color='red')
+plt.xlabel('Time (s)')
+plt.ylabel('TLE Range Bin')
+plt.legend()
+plt.savefig('tle_range_bin_over_time.png')
 
 
 
