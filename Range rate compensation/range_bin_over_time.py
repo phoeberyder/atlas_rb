@@ -28,7 +28,7 @@ height =cpi # CPI Size
 points = int(samp_rate * pri)
 infilename = '/share/nas2/pryder/SET_Observations_Test_1/Wednesday/vdifs/TSSat_20250205_lo1_1295MHz_intelsat33e.vdifa' #second vdif
 channel = 0
-start_strip = 6400
+start_strip = 7200
 
 # Open VDIF
 pola, header = open_vdif(infilename, channel)
