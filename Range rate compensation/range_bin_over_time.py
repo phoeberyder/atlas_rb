@@ -163,14 +163,14 @@ plt.xlabel('Time (s)')
 plt.ylabel('Power')
 plt.title('Peak Power and Average Noise Over Time')
 plt.legend()
-plt.savefig('peak_power_average_noise_over_time.png')
+plt.savefig('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_average_noise_over_time.png')
 plt.clf()
 
 plt.plot(strip_time, peak_index, label='Peak Index', color='green')
 plt.xlabel('Time (s)')
 plt.ylabel('Peak Index')
 plt.legend()
-plt.savefig('peak_index_over_time.png')
+plt.savefig('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time.png')
 plt.clf()
 
 
@@ -178,7 +178,7 @@ plt.plot(strip_time, tle_range_bin, label='TLE Range Bin', color='red')
 plt.xlabel('Time (s)')
 plt.ylabel('TLE Range Bin')
 plt.legend()
-plt.savefig('tle_range_bin_over_time.png')
+plt.savefig('/share/nas2/pryder/tumbling_git/Range rate compensation/tle_range_bin_over_time.png')
 
 
 
