@@ -75,7 +75,7 @@ for i in range(height):
 
 for n in range(number_of_strips):
     print(n)
-    start_idx = (n*overlap)
+    start_idx = 200 + (n*overlap)
     end_idx = start_idx + (height * points)
     cpi_data = iq_samples[start_idx:end_idx].reshape((height, points))
 
@@ -156,7 +156,7 @@ for n in range(number_of_strips):
 
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./points_overlap_spectrogram_192081_part_1.npy', spectrogram)
+np.save('./points_overlap_spectrogram_192081_part_2.npy', spectrogram)
 
 # plt.figure(figsize=(15, 5))
 # plt.imshow(10 * np.log10(spectrogram+1e-12)-np.max(10 * np.log10(spectrogram+1e-12)), aspect='auto', origin='lower', vmin=-15, vmax=0, extent= [0, samp_rate*points*pri, -max_velocity, max_velocity], cmap='magma')
