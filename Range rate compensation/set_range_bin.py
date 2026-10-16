@@ -42,7 +42,7 @@ overlap = points
 rough_period = 15.6
 time_of_one_cpi = pri*cpi #in seconds
 points_of_one_period = rough_period/time_of_one_cpi * points
-number_of_strips = 800 #800 in total #int(points_of_one_period/(overlap))*100 # number of strips in one period
+number_of_strips = 1600 #800 in total #int(points_of_one_period/(overlap))*100 # number of strips in one period
 print(number_of_strips)
 spectrogram = np.zeros((height*2, number_of_strips))
 
@@ -50,28 +50,28 @@ spectrogram = np.zeros((height*2, number_of_strips))
 bin_spacing_m = c/(samp_rate)
 R_tle = np.zeros(height)
 target = intelsat_tle
-for i in range(height):
-        start_idx = (i*overlap)
-        s_offset = (start_idx / samp_rate) + 1.658 + (i * pri)
-        t = ts.utc(2025, 2, 5, 13, 50, s_offset)
-        sat_pos = target.at(t).position.km
+# for i in range(height):
+#         start_idx = (i*overlap)
+#         s_offset = (start_idx / samp_rate) + 1.658 + (i * pri)
+#         t = ts.utc(2025, 2, 5, 13, 50, s_offset)
+#         sat_pos = target.at(t).position.km
 
-        # Transmitter and receiver locations
-        mhr = wgs84.latlon(42.6, 288.5)
-        rx = wgs84.latlon(53.2365, -2.3087)
-        tx_pos = mhr.at(t).position.km
-        rx_pos = rx.at(t).position.km
+#         # Transmitter and receiver locations
+#         mhr = wgs84.latlon(42.6, 288.5)
+#         rx = wgs84.latlon(53.2365, -2.3087)
+#         tx_pos = mhr.at(t).position.km
+#         rx_pos = rx.at(t).position.km
 
-        difference_rx = (target - rx)
-        difference_tx = (target - mhr)
+#         difference_rx = (target - rx)
+#         difference_tx = (target - mhr)
 
-        topocentric_rx = (difference_rx.at(t))
-        topocentric_tx = (difference_tx.at(t))
+#         topocentric_rx = (difference_rx.at(t))
+#         topocentric_tx = (difference_tx.at(t))
 
-        range_rx_m = topocentric_rx.distance().m
-        range_tx_m = topocentric_tx.distance().m
-        range_m = range_rx_m + range_tx_m
-        R_tle[i] = range_m
+#         range_rx_m = topocentric_rx.distance().m
+#         range_tx_m = topocentric_tx.distance().m
+#         range_m = range_rx_m + range_tx_m
+#         R_tle[i] = range_m
 
 for n in range(number_of_strips):
     print(n)
@@ -80,39 +80,40 @@ for n in range(number_of_strips):
     cpi_data = iq_samples[start_idx:end_idx].reshape((height, points))
 
     # Update TLE range rate for the start of this CPI
-    s_offset = (start_idx / samp_rate) + 1.658 #offset from 50 from start of file
-    t = ts.utc(2025, 2, 5, 13, 50, s_offset)
-    sat_pos = target.at(t).position.km
+    # s_offset = (start_idx / samp_rate) + 1.658 #offset from 50 from start of file
+    # t = ts.utc(2025, 2, 5, 13, 50, s_offset)
+    # sat_pos = target.at(t).position.km
 
-    # Transmitter and receiver locations
-    mhr = wgs84.latlon(42.6, 288.5)
-    rx = wgs84.latlon(53.2365, -2.3087)
-    tx_pos = mhr.at(t).position.km
-    rx_pos = rx.at(t).position.km
+    # # Transmitter and receiver locations
+    # mhr = wgs84.latlon(42.6, 288.5)
+    # rx = wgs84.latlon(53.2365, -2.3087)
+    # tx_pos = mhr.at(t).position.km
+    # rx_pos = rx.at(t).position.km
 
-    difference_rx = (target - rx)
-    difference_tx = (target - mhr)
+    # difference_rx = (target - rx)
+    # difference_tx = (target - mhr)
 
-    topocentric_rx = (difference_rx.at(t))
-    topocentric_tx = (difference_tx.at(t))
+    # topocentric_rx = (difference_rx.at(t))
+    # topocentric_tx = (difference_tx.at(t))
 
-    range_rx_m = topocentric_rx.distance().m
-    range_tx_m = topocentric_tx.distance().m
-    range_m = range_rx_m + range_tx_m
-    tau = range_m/c
-    range_bin = int(np.floor(range_m/(2*bin_spacing_m)))
-    delay_samples = tau * samp_rate
-    print('approx range bin: ', range_bin)
+    # range_rx_m = topocentric_rx.distance().m
+    # range_tx_m = topocentric_tx.distance().m
+    # range_m = range_rx_m + range_tx_m
+    # tau = range_m/c
+    # range_bin = int(np.floor(range_m/(2*bin_spacing_m)))
+    # delay_samples = tau * samp_rate
+    # print('approx range bin: ', range_bin)
 
-    p = np.polyfit(np.linspace(0, pri, height), R_tle, 2)
-    R_fit = np.polyval(p, np.linspace(0, pri, height))
-    dR = R_fit - R_fit[0]
-    d_bins = dR / (2*bin_spacing_m)
+    # p = np.polyfit(np.linspace(0, pri, height), R_tle, 2)
+    # R_fit = np.polyval(p, np.linspace(0, pri, height))
+    # dR = R_fit - R_fit[0]
+    # d_bins = dR / (2*bin_spacing_m)
 
-    _, _, the_range, _, _, range_rate = topocentric_rx.frame_latlon_and_rates(rx)
-    _, _, the_range_tx, _, _, range_rate_tx = topocentric_tx.frame_latlon_and_rates(mhr)
-    range_rate = range_rate_tx.m_per_s/2 + range_rate.m_per_s/2
-    tau_dot = range_rate / c
+    # _, _, the_range, _, _, range_rate = topocentric_rx.frame_latlon_and_rates(rx)
+    # _, _, the_range_tx, _, _, range_rate_tx = topocentric_tx.frame_latlon_and_rates(mhr)
+    # range_rate = range_rate_tx.m_per_s/2 + range_rate.m_per_s/2
+    # tau_dot = range_rate / c
+    tau_dot = 0.0
 
     # Create template: baseband * chirp * envelope
     t_pulse = np.linspace(0, pri, points, endpoint=False)
@@ -137,14 +138,15 @@ for n in range(number_of_strips):
         # # Doppler Phase Correction
         # f_d = -2 * range_rate * freq / c
         # bulk_phase = np.exp(-1j * 2 * np.pi * f_d * start_sec)
-        cdat_pc[i] = shift(compressed_pulse, -d_bins[i], mode='constant', order=1)
+        # cdat_pc[i] = shift(compressed_pulse, -d_bins[i], mode='constant', order=1)
+        cdat_pc[i] = compressed_pulse
     
     # cpi_power = np.mean(np.abs(cdat_pc)**2, axis=0)
     power = (np.abs(cdat_pc))**2
     incoho_sum = np.sum(power, axis=0)
     # peak_idx = np.argmax(incoho_sum[283641-500:283641+500]) + 283641 - 500
     # peak_idx = np.argmax(incoho_sum)
-    peak_idx = 192081
+    peak_idx = 192083
     # print('peak index: ', peak_idx)
     range_cut = cdat_pc[:, peak_idx] 
     zero_pad = height
@@ -156,7 +158,7 @@ for n in range(number_of_strips):
 
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./points_overlap_spectrogram_192081.npy', spectrogram)
+np.save('./points_overlap_spectrogram_192083.npy', spectrogram)
 
 # plt.figure(figsize=(15, 5))
 # plt.imshow(10 * np.log10(spectrogram+1e-12)-np.max(10 * np.log10(spectrogram+1e-12)), aspect='auto', origin='lower', vmin=-15, vmax=0, extent= [0, samp_rate*points*pri, -max_velocity, max_velocity], cmap='magma')
