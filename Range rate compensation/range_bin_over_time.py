@@ -16,7 +16,7 @@ ts = load.timescale()
 intelsat_tle = EarthSatellite(tle_line_1, tle_line_2, target_name, ts)
 
 # input parameters 
-cpi = 128      
+cpi = 64      
 bw = 8e6        
 Tp = 800e-6    
 pri = 19.7e-3
