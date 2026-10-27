@@ -25,7 +25,7 @@ print('Converted into IQ samples.')
 
 overlap = points
 time_of_one_cpi = pri*cpi #in seconds
-number_of_strips = 6000 # = 118.2 seconds
+number_of_strips = 1000 # = 118.2/6 (20) seconds
 print(number_of_strips)
 # spectrogram = np.zeros((height*2, number_of_strips))
 
