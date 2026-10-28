@@ -25,7 +25,7 @@ print('Converted into IQ samples.')
 
 overlap = points
 time_of_one_cpi = pri*cpi #in seconds
-number_of_strips = 1000 # = 118.2/6 (20) seconds
+number_of_strips = 6000 # = 118.2/6 (20) seconds
 print(number_of_strips)
 # spectrogram = np.zeros((height*2, number_of_strips))
 
@@ -34,9 +34,15 @@ peak_index = []
 peak_power = []
 average_noise = []
 
-pulse_idx = np.load('./Range rate compensation/peak_index_over_time_no_compensation_256cpi.npy')
+peak_idx = np.load('./Range rate compensation/peak_index_over_time_no_compensation_256cpi.npy')
 slope = 0.06113453070838821
 intercept = 192079.8402591338
+pulse_idx = np.arange(height)
+peak_fit = slope * pulse_idx + intercept
+reference_bin = peak_fit[0]
+shifts = reference_bin - peak_fit
+
+freq_bins = np.fft.fftfreq(points, d=1/samp_rate)
 
 
 
@@ -52,22 +58,21 @@ for n in range(number_of_strips):
     template_fft = np.fft.fft(template)
 
     cdat_pc = np.zeros((height, points), dtype=complex)
+    
+    
 
     # Pulse Compression
     for i in range(height):
         pulse_fft = np.fft.fft(cpi_data[i])
+        
         # # Pulse Compression and RCM shift
-        compressed_pulse = np.fft.ifft(pulse_fft * np.conj(template_fft))
+        phase_ramp = np.exp(-2j*np.pi*shifts[:, None]*freq_bins[None, :])
+        compressed_pulse = np.fft.ifft(pulse_fft * np.conj(template_fft)*phase_ramp)
         cdat_pc[i] = compressed_pulse
 
-    peak_fit = slope * pulse_idx + intercept
-    reference_bin = peak_fit[0]
-    shifts = np.rint(reference_bin - peak_fit).astype(int)
-    cdat_aligned = np.empty_like(cdat_pc)
-    for i in range(height):
-        cdat_aligned[i] = np.roll(cdat_pc[i], shifts[i])
     
-    power = (np.abs(cdat_aligned))**2
+    
+    power = (np.abs(cdat_pc))**2
     incoho_sum = np.sum(power, axis=0)
     peak_idx = np.argmax(incoho_sum)
     peak_index.append(peak_idx)
@@ -75,7 +80,7 @@ for n in range(number_of_strips):
     average_noise.append(np.median(incoho_sum))
     
     
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_some_compensation_256cpi.npy', peak_index)
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_some_compensation_256cpi.npy', peak_power)
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_some_compensation_256cpi.npy', average_noise)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_fractional_compensation_256cpi.npy', peak_index)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_fractional_compensation_256cpi.npy', peak_power)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_fractional_compensation_256cpi.npy', average_noise)
 
