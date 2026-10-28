@@ -67,7 +67,7 @@ for n in range(number_of_strips):
     for i in range(height):
         cdat_aligned[i] = np.roll(cdat_pc[i], shifts[i])
     
-    power = (np.abs(cdat_pc))**2
+    power = (np.abs(cdat_aligned))**2
     incoho_sum = np.sum(power, axis=0)
     peak_idx = np.argmax(incoho_sum)
     peak_index.append(peak_idx)
