@@ -66,7 +66,7 @@ for n in range(number_of_strips):
         pulse_fft = np.fft.fft(cpi_data[i])
         
         # # Pulse Compression and RCM shift
-        phase_ramp = np.exp(-2j*np.pi*shifts[:, None]*freq_bins[None, :])
+        phase_ramp = np.exp(-2j*np.pi*shifts[:, None]*freq_bins[None, :])[i]
         compressed_pulse = np.fft.ifft(pulse_fft * np.conj(template_fft)*phase_ramp)
         cdat_pc[i] = compressed_pulse
 
