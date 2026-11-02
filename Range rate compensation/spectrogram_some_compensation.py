@@ -25,7 +25,7 @@ print('Converted into IQ samples.')
 
 overlap = points
 time_of_one_cpi = pri*cpi #in seconds
-number_of_strips = 6000 # = 118.2/6 (20) seconds
+number_of_strips = 10 # = 118.2/6 (20) seconds
 print(number_of_strips)
 # spectrogram = np.zeros((height*2, number_of_strips))
 
@@ -80,7 +80,7 @@ for n in range(number_of_strips):
     average_noise.append(np.median(incoho_sum))
     
     
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_fractional_compensation_256cpi.npy', peak_index)
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_fractional_compensation_256cpi.npy', peak_power)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_fractional_compensation_256cpi_short.npy', peak_index)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_fractional_compensation_256cpi_short.npy', peak_power)
 np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_fractional_compensation_256cpi.npy', average_noise)
 
