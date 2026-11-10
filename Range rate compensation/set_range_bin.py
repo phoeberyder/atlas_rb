@@ -42,7 +42,7 @@ overlap = points*128
 rough_period = 15.6
 time_of_one_cpi = pri*cpi #in seconds
 points_of_one_period = rough_period/time_of_one_cpi * points
-number_of_strips = pola//points*128 #800 in total #int(points_of_one_period/(overlap))*100 # number of strips in one period
+number_of_strips = 100 #800 in total #int(points_of_one_period/(overlap))*100 # number of strips in one period
 print(number_of_strips)
 spectrogram = np.zeros((height*2, number_of_strips))
 
