@@ -38,11 +38,11 @@ ts = load.timescale()
 freqs = np.fft.fftfreq(points, d=1/samp_rate) # Used for Fourier Shift RCM correction
 startoffset = 0 #int(samp_rate * 100)
 
-overlap = points*64
+overlap = points*128
 rough_period = 15.6
 time_of_one_cpi = pri*cpi #in seconds
 points_of_one_period = rough_period/time_of_one_cpi * points
-number_of_strips = 210 #800 in total #int(points_of_one_period/(overlap))*100 # number of strips in one period
+number_of_strips = pola//points*128 #800 in total #int(points_of_one_period/(overlap))*100 # number of strips in one period
 print(number_of_strips)
 spectrogram = np.zeros((height*2, number_of_strips))
 
@@ -158,7 +158,7 @@ for n in range(number_of_strips):
 
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./points_overlap_spectrogram_192083_half_a_cpi_overlap_2_periods.npy', spectrogram)
+np.save('./points_overlap_spectrogram_192083_no_overlap.npy', spectrogram)
 
 # plt.figure(figsize=(15, 5))
 # plt.imshow(10 * np.log10(spectrogram+1e-12)-np.max(10 * np.log10(spectrogram+1e-12)), aspect='auto', origin='lower', vmin=-15, vmax=0, extent= [0, samp_rate*points*pri, -max_velocity, max_velocity], cmap='magma')
