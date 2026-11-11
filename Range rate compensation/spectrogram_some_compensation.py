@@ -34,15 +34,10 @@ peak_index = []
 peak_power = []
 average_noise = []
 
-peak_idx = np.load('./Range rate compensation/peak_index_over_time_no_compensation_256cpi.npy')
 slope = 0.06113453070838821
 intercept = 192079.8402591338
-pulse_idx = np.arange(height)
-peak_fit = slope * pulse_idx + intercept
-reference_bin = peak_fit[0]
-shifts = reference_bin - peak_fit
-
-freq_bins = np.fft.fftfreq(points, d=1/samp_rate)
+shifts = (slope * np.arange(number_of_strips)) + intercept
+spectrogram = np.zeros((height*2, number_of_strips))
 
 
 
@@ -50,6 +45,8 @@ for n in range(number_of_strips):
     start_idx = (n*overlap)
     end_idx = start_idx + (height * points)
     cpi_data = iq_samples[start_idx:end_idx].reshape((height, points))
+    num_pulses, num_bins = cpi_data.shape
+    freqs = np.fft.fftfreq(num_bins)
     tau_dot = 0.0
 
     # Create template: baseband * chirp * envelope
@@ -66,21 +63,32 @@ for n in range(number_of_strips):
         pulse_fft = np.fft.fft(cpi_data[i])
         
         # # Pulse Compression and RCM shift
-        phase_ramp = np.exp(-2j*np.pi*shifts[:, None]*freq_bins[None, :])[i]
-        compressed_pulse = np.fft.ifft(pulse_fft * np.conj(template_fft)*phase_ramp)
+        # phase_ramp = np.exp(-2j*np.pi*shift*freqs)
+        shifted_pulse = pulse_fft #* phase_ramp
+        compressed_pulse = np.fft.ifft(shifted_pulse * np.conj(template_fft))
         cdat_pc[i] = compressed_pulse
 
     
     
-    power = (np.abs(cdat_pc))**2
-    incoho_sum = np.sum(power, axis=0)
-    peak_idx = np.argmax(incoho_sum)
+    
+    peak_idx = int(shifts[n])
     peak_index.append(peak_idx)
-    peak_power.append(incoho_sum[peak_idx])
-    average_noise.append(np.median(incoho_sum))
+   
+
+    range_cut = cdat_pc[:, peak_idx] 
+    zero_pad = height
+    range_cut_padded = np.pad(range_cut, (zero_pad//2, zero_pad//2), mode='constant')
+
+    window_size = range_cut_padded.shape[0]
+    window = np.hanning(window_size)
+    doppler_spectrum = np.fft.fftshift(np.fft.fft(range_cut_padded * window))
+
+    spectrogram[:, n] = np.abs(doppler_spectrum)**2
+
+np.save('./points_overlap_spectrogram_picking_range_bin_256cpi_short.npy', spectrogram)
     
     
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_fractional_compensation_256cpi_short.npy', peak_index)
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_fractional_compensation_256cpi_short.npy', peak_power)
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_fractional_compensation_256cpi.npy', average_noise)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_picking_range_bin_256cpi_short.npy', peak_index)
+# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_fractional_compensation_256cpi_short.npy', peak_power)
+# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_fractional_compensation_256cpi.npy', average_noise)
 
