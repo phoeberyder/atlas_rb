@@ -75,7 +75,7 @@ for n in range(number_of_strips):
     power = (np.abs(cdat_pc))**2
     incoho_sum = np.sum(power, axis=0)
     peak_idx = np.argmax(incoho_sum)
-    if abs(peak_idx - reference_shift)< 100:
+    if abs(peak_idx - reference_shift)> 100:
         peak_idx = reference_shift
     else:
         peak_idx = peak_idx
