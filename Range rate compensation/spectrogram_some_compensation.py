@@ -2,7 +2,7 @@ import numpy as np
 from pc_utils import rect, open_vdif, iq_conversion
 
 # input parameters 
-cpi = 64    
+cpi = 128    
 bw = 8e6        
 Tp = 800e-6    
 pri = 19.7e-3
@@ -33,11 +33,15 @@ print(number_of_strips)
 peak_index = []
 peak_power = []
 average_noise = []
-
+### 256 cpi
 # slope = 0.06113453070838821
 # intercept = 192079.8402591338
-slope = 0.05298529761390951
-intercept = 192080.1482096883
+### 64 cpi
+# slope = 0.05298529761390951
+# intercept = 192080.1482096883
+### 128 cpi
+# slope = 
+# intercept = 
 shifts = (slope * np.arange(number_of_strips)) + intercept
 spectrogram = np.zeros((height*2, number_of_strips))
 reference_shift = int(shifts[0])
@@ -96,10 +100,10 @@ for n in range(number_of_strips):
 
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./points_overlap_spectrogram_picking_range_bin_64cpi_6000strips.npy', spectrogram)
+np.save('./points_overlap_spectrogram_picking_range_bin_128cpi_6000strips.npy', spectrogram)
     
     
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_picking_range_bin_64cpi_6000strips.npy', peak_index)
-# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_fractional_compensation_64cpi_short.npy', peak_power)
-# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_fractional_compensation_64cpi.npy', average_noise)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_picking_range_bin_128cpi_6000strips.npy', peak_index)
+# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_fractional_compensation_128cpi_short.npy', peak_power)
+# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_fractional_compensation_128cpi.npy', average_noise)
 
