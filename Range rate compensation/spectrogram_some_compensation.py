@@ -2,7 +2,7 @@ import numpy as np
 from pc_utils import rect, open_vdif, iq_conversion
 
 # input parameters 
-cpi = 256    
+cpi = 64    
 bw = 8e6        
 Tp = 800e-6    
 pri = 19.7e-3
@@ -34,8 +34,10 @@ peak_index = []
 peak_power = []
 average_noise = []
 
-slope = 0.06113453070838821
-intercept = 192079.8402591338
+# slope = 0.06113453070838821
+# intercept = 192079.8402591338
+slope = 0.05298529761390951
+intercept = 192080.1482096883
 shifts = (slope * np.arange(number_of_strips)) + intercept
 spectrogram = np.zeros((height*2, number_of_strips))
 reference_shift = int(shifts[0])
@@ -56,17 +58,17 @@ for n in range(number_of_strips):
     template_fft = np.fft.fft(template)
 
     cdat_pc = np.zeros((height, points), dtype=complex)
-    
+    shift = int(shifts[n])
     
 
     # Pulse Compression
     for i in range(height):
         pulse_fft = np.fft.fft(cpi_data[i])
-        shift = int(shifts[n]) - reference_shift
+        # shift = int(shifts[n]) #- reference_shift
         
         # # Pulse Compression and RCM shift
-        phase_ramp = np.exp(-2j*np.pi*shift*freqs)
-        shifted_pulse = pulse_fft * phase_ramp
+        # phase_ramp = np.exp(-2j*np.pi*shift*freqs)
+        shifted_pulse = pulse_fft #* phase_ramp
         compressed_pulse = np.fft.ifft(shifted_pulse * np.conj(template_fft))
         cdat_pc[i] = compressed_pulse
 
@@ -74,7 +76,8 @@ for n in range(number_of_strips):
     
     power = (np.abs(cdat_pc))**2
     incoho_sum = np.sum(power, axis=0)
-    peak_idx = 192081
+    peak_idx = shift
+    peak_index.append(peak_idx)
     # if abs(peak_idx - reference_shift)> 100:
     #     peak_idx = previous_peak
     # else:
@@ -93,10 +96,10 @@ for n in range(number_of_strips):
 
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./points_overlap_spectrogram_phase_shift_set_range_bin_256cpi.npy', spectrogram)
+np.save('./points_overlap_spectrogram_picking_range_bin_64cpi_6000strips.npy', spectrogram)
     
     
-# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_phase_shift_256cpi_short.npy', peak_index)
-# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_fractional_compensation_256cpi_short.npy', peak_power)
-# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_fractional_compensation_256cpi.npy', average_noise)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_picking_range_bin_64cpi_6000strips.npy', peak_index)
+# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_fractional_compensation_64cpi_short.npy', peak_power)
+# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_fractional_compensation_64cpi.npy', average_noise)
 
