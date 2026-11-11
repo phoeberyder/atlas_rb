@@ -73,21 +73,23 @@ for n in range(number_of_strips):
     
     
     
-    peak_idx = int(shifts[n])
+    power = (np.abs(cdat_pc))**2
+    incoho_sum = np.sum(power, axis=0)
+    peak_idx = np.argmax(incoho_sum)
     peak_index.append(peak_idx)
    
 
-    range_cut = cdat_pc[:, peak_idx] 
-    zero_pad = height
-    range_cut_padded = np.pad(range_cut, (zero_pad//2, zero_pad//2), mode='constant')
+#     range_cut = cdat_pc[:, peak_idx] 
+#     zero_pad = height
+#     range_cut_padded = np.pad(range_cut, (zero_pad//2, zero_pad//2), mode='constant')
 
-    window_size = range_cut_padded.shape[0]
-    window = np.hanning(window_size)
-    doppler_spectrum = np.fft.fftshift(np.fft.fft(range_cut_padded * window))
+#     window_size = range_cut_padded.shape[0]
+#     window = np.hanning(window_size)
+#     doppler_spectrum = np.fft.fftshift(np.fft.fft(range_cut_padded * window))
 
-    spectrogram[:, n] = np.abs(doppler_spectrum)**2
+#     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./points_overlap_spectrogram_phase_shift_256cpi_short.npy', spectrogram)
+# np.save('./points_overlap_spectrogram_phase_shift_256cpi_short.npy', spectrogram)
     
     
 np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_phase_shift_256cpi_short.npy', peak_index)
