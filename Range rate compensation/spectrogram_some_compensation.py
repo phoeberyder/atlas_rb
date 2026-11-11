@@ -25,7 +25,7 @@ print('Converted into IQ samples.')
 
 overlap = points
 time_of_one_cpi = pri*cpi #in seconds
-number_of_strips = 6000 # = 118.2) seconds
+number_of_strips = 10 # = 118.2) seconds
 print(number_of_strips)
 # spectrogram = np.zeros((height*2, number_of_strips))
 
@@ -38,6 +38,7 @@ slope = 0.06113453070838821
 intercept = 192079.8402591338
 shifts = (slope * np.arange(number_of_strips)) + intercept
 spectrogram = np.zeros((height*2, number_of_strips))
+reference_shift = int(shifts[0])
 
 
 
@@ -61,10 +62,11 @@ for n in range(number_of_strips):
     # Pulse Compression
     for i in range(height):
         pulse_fft = np.fft.fft(cpi_data[i])
+        shift = int(shifts[n]) - reference_shift
         
         # # Pulse Compression and RCM shift
-        # phase_ramp = np.exp(-2j*np.pi*shift*freqs)
-        shifted_pulse = pulse_fft #* phase_ramp
+        phase_ramp = np.exp(-2j*np.pi*shift*freqs)
+        shifted_pulse = pulse_fft * phase_ramp
         compressed_pulse = np.fft.ifft(shifted_pulse * np.conj(template_fft))
         cdat_pc[i] = compressed_pulse
 
@@ -85,10 +87,10 @@ for n in range(number_of_strips):
 
     spectrogram[:, n] = np.abs(doppler_spectrum)**2
 
-np.save('./points_overlap_spectrogram_picking_range_bin_256cpi_6000strips.npy', spectrogram)
+np.save('./points_overlap_spectrogram_phase_shift_256cpi_short.npy', spectrogram)
     
     
-# np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_picking_range_bin_256cpi.npy', peak_index)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_phase_shift_256cpi_short.npy', peak_index)
 # np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_fractional_compensation_256cpi_short.npy', peak_power)
 # np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_fractional_compensation_256cpi.npy', average_noise)
 
