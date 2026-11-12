@@ -25,7 +25,7 @@ print('VDIF opened.')
 iq_samples = iq_conversion(pola)
 print('Converted into IQ samples.')
 
-cpi_list = [32, 64, 128, 256, 512, 1024, 2048, 4096, 8192]
+cpi_list = [16384, 32768, 65536, 131072, 262144, 524288]
 cpi_peak = []
 for cpi in cpi_list:
     print(cpi)
@@ -51,6 +51,6 @@ for cpi in cpi_list:
     incoho_sum = np.sum(power, axis=0)
     cpi_peak.append(incoho_sum[192083])
 
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/cpi_peak.npy', cpi_peak)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/cpi_peak_part2.npy', cpi_peak)
 
 
