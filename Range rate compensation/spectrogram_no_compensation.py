@@ -2,7 +2,7 @@ import numpy as np
 from pc_utils import rect, open_vdif, iq_conversion
 
 # input parameters 
-cpi = 128   
+cpi = 2048   
 bw = 8e6        
 Tp = 800e-6    
 pri = 19.7e-3
@@ -63,7 +63,7 @@ for n in range(number_of_strips):
     average_noise.append(np.median(incoho_sum))
     
     
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_no_compensation_128cpi.npy', peak_index)
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_no_compensation_128cpi.npy', peak_power)
-np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_no_compensation_128cpi.npy', average_noise)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_index_over_time_no_compensation_2048cpi.npy', peak_index)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/peak_power_over_time_no_compensation_2048cpi.npy', peak_power)
+np.save('/share/nas2/pryder/tumbling_git/Range rate compensation/average_noise_over_time_no_compensation_2048cpi.npy', average_noise)
 
